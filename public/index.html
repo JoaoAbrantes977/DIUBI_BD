@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa Dinâmica</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Pesquisa Dinâmica de Projetos</h1>
+    <form id="searchForm">
+        <div>
+            <label for="nomeProjeto">Nome do Projeto:</label>
+            <input type="text" id="nomeProjeto" name="nomeProjeto">
+        </div>
+        <div>
+            <label for="tituloProjeto">Título do Projeto:</label>
+            <input type="text" id="tituloProjeto" name="tituloProjeto">
+        </div>
+        <div>
+            <label for="dataInicio">Data de Início:</label>
+            <input type="date" id="dataInicio" name="dataInicio">
+        </div>
+        <div>
+            <label for="dataFim">Data de Fim:</label>
+            <input type="date" id="dataFim" name="dataFim">
+        </div>
+        <div>
+            <label for="nomePrograma">Nome do Programa:</label>
+            <input type="text" id="nomePrograma" name="nomePrograma">
+        </div>
+        <div>
+            <label for="nomePais">Nome do País:</label>
+            <input type="text" id="nomePais" name="nomePais">
+        </div>
+        <div>
+            <label for="tipoPublicacao">Tipo de Publicação:</label>
+            <input type="text" id="tipoPublicacao" name="tipoPublicacao">
+        </div>
+        <div>
+            <label for="valorPublicacao">Valor da Publicação:</label>
+            <input type="text" id="valorPublicacao" name="valorPublicacao">
+        </div>
+        <div>
+            <label for="nomeMembro">Nome do Membro:</label>
+            <input type="text" id="nomeMembro" name="nomeMembro">
+        </div>
+        <div>
+            <label for="funcaoMembro">Função do Membro:</label>
+            <input type="text" id="funcaoMembro" name="funcaoMembro">
+        </div>
+        <div>
+            <label for="estadoProjeto">Estado do Projeto:</label>
+            <input type="text" id="estadoProjeto" name="estadoProjeto">
+        </div>
+        <div>
+            <label for="keyword">Keyword:</label>
+            <input type="text" id="keyword" name="keyword">
+        </div>
+        <div>
+            <label for="dominioCientifico">Domínio Científico:</label>
+            <input type="text" id="dominioCientifico" name="dominioCientifico">
+        </div>
+        <div>
+            <label for="areaCientifica">Área Científica:</label>
+            <input type="text" id="areaCientifica" name="areaCientifica">
+        </div>
+        <div>
+            <label for="nomeDepartamento">Nome do Departamento:</label>
+            <input type="text" id="nomeDepartamento" name="nomeDepartamento">
+        </div>
+        <div>
+            <label for="nomeEntidade">Nome da Entidade:</label>
+            <input type="text" id="nomeEntidade" name="nomeEntidade">
+        </div>
+        <div>
+            <label for="tipoFinanciamento">Tipo de Financiamento (Interno/Externo):</label>
+            <input type="text" id="tipoFinanciamento" name="tipoFinanciamento">
+        </div>
+        <div>
+            <label for="competitivo">Competitivo (Sim/Não):</label>
+            <input type="text" id="competitivo" name="competitivo">
+        </div>
+        <button type="submit">Pesquisar</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

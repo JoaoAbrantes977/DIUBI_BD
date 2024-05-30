@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Projects</title>
+</head>
+<body>
+    <button id="fetchButton">Submeter</button>
+    <div id="tableContainer" style="display: none;">
+        <table id="projectTable">
+            <thead>
+                <tr>
+                    <th>ID Projeto</th>
+                    <th>Nome</th>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Data de Início</th>
+                    <th>Data de Fim</th>
+                </tr>
+            </thead>
+            <tbody id="projectTableBody">
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            fetch('http://localhost:3000/projeto') // Replace with the actual route if different
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('projectTableBody');
+                    tableBody.innerHTML = ''; // Clear previous content
+                    data.Projeto.forEach(projeto => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${projeto.ID_Projeto}</td>
+                            <td>${projeto.Nome}</td>
+                            <td>${projeto.Titulo}</td>
+                            <td>${projeto.Descricao}</td>
+                            <td>${new Date(projeto.Data_Inicio).toLocaleDateString()}</td>
+                            <td>${new Date(projeto.Data_Fim).toLocaleDateString()}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    document.getElementById('tableContainer').style.display = 'block'; // Show the table
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+    
+    
+</body>
+</html>

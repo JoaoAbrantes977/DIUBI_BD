@@ -6,12 +6,14 @@ const app = express();
 const port = 3000;
 
 // Configuração de conexão
-const connectionString = "Driver={SQL Server};Server=localhost;Database=seu_banco_de_dados;Trusted_Connection=Yes;";
+const connectionString = "Driver={SQL Server};Server=LAPTOP-73LR98JM\\SQLEXPRESS;Database=DIUBI_DB;Trusted_Connection=Yes;";
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors()); // Adiciona middleware cors
+
+
 
 // Rota para o formulário de pesquisa
 app.post('/search', (req, res) => {
@@ -36,29 +38,36 @@ app.post('/search', (req, res) => {
         LEFT JOIN Membros_DIUBI m ON fm.ID_Membro = m.ID_Membro
         LEFT JOIN Departamento_Investigacao di ON m.ID_Membro = di.ID_Membro
         LEFT JOIN Departamento dep ON di.ID_Departamento = dep.ID_Departamento
+        LEFT JOIN Pais pais ON e.ID_Pais = pais.ID_Pais
         WHERE 1=1
     `;
 
-    if (nomeProjeto) query += ` AND p.Nome LIKE '%${nomeProjeto}%'`;
-    if (tituloProjeto) query += ` AND p.Titulo LIKE '%${tituloProjeto}%'`;
-    if (dataInicio) query += ` AND p.Data_Inicio >= '${dataInicio}'`;
-    if (dataFim) query += ` AND p.Data_Fim <= '${dataFim}'`;
-    if (nomePrograma) query += ` AND prg.Nome_Programa LIKE '%${nomePrograma}%'`;
-    if (nomePais) query += ` AND e.Nome_do_Pais LIKE '%${nomePais}%'`;
-    if (tipoPublicacao) query += ` AND pub.Tipo LIKE '%${tipoPublicacao}%'`;
-    if (valorPublicacao) query += ` AND pub.Valor LIKE '%${valorPublicacao}%'`;
-    if (nomeMembro) query += ` AND m.Num_Funcionario LIKE '%${nomeMembro}%'`;
-    if (funcaoMembro) query += ` AND m.Funcao LIKE '%${funcaoMembro}%'`;
-    if (estadoProjeto) query += ` AND te.Estado LIKE '%${estadoProjeto}%'`;
-    if (keyword) query += ` AND k.Keyword LIKE '%${keyword}%'`;
-    if (dominioCientifico) query += ` AND td.Dominio_Cientifico LIKE '%${dominioCientifico}%'`;
-    if (areaCientifica) query += ` AND ac.Area_Cientifica LIKE '%${areaCientifica}%'`;
-    if (nomeDepartamento) query += ` AND dep.Nome_Departamento LIKE '%${nomeDepartamento}%'`;
-    if (nomeEntidade) query += ` AND e.Nome LIKE '%${nomeEntidade}%'`;
-    if (tipoFinanciamento) query += ` AND tf.Tipo = ${tipoFinanciamento === 'Interno' ? 1 : 0}`;
-    if (competitivo) query += ` AND tf.Competitivo = ${competitivo === 'Sim' ? 1 : 0}`;
+    const conditions = [];
 
-    console.log("Consulta SQL:", query); 
+    if (nomeProjeto) conditions.push(`p.Nome LIKE '%${nomeProjeto}%'`);
+    if (tituloProjeto) conditions.push(`p.Titulo LIKE '%${tituloProjeto}%'`);
+    if (dataInicio) conditions.push(`p.Data_Inicio >= '${dataInicio}'`);
+    if (dataFim) conditions.push(`p.Data_Fim <= '${dataFim}'`);
+    if (nomePrograma) conditions.push(`prg.Nome_Programa LIKE '%${nomePrograma}%'`);
+    if (nomePais) conditions.push(`pais.Nome_do_Pais LIKE '%${nomePais}%'`);
+    if (tipoPublicacao) conditions.push(`pub.Tipo LIKE '%${tipoPublicacao}%'`);
+    if (valorPublicacao) conditions.push(`pub.Valor LIKE '%${valorPublicacao}%'`);
+    if (nomeMembro) conditions.push(`m.Num_Funcionario LIKE '%${nomeMembro}%'`);
+    if (funcaoMembro) conditions.push(`m.Funcao LIKE '%${funcaoMembro}%'`);
+    if (estadoProjeto) conditions.push(`te.Estado LIKE '%${estadoProjeto}%'`);
+    if (keyword) conditions.push(`k.Keyword LIKE '%${keyword}%'`);
+    if (dominioCientifico) conditions.push(`td.Dominio_Cientifico LIKE '%${dominioCientifico}%'`);
+    if (areaCientifica) conditions.push(`ac.Area_Cientifica LIKE '%${areaCientifica}%'`);
+    if (nomeDepartamento) conditions.push(`dep.Nome_Departamento LIKE '%${nomeDepartamento}%'`);
+    if (nomeEntidade) conditions.push(`e.Nome LIKE '%${nomeEntidade}%'`);
+    if (tipoFinanciamento) conditions.push(`tf.Tipo = ${tipoFinanciamento === 'Interno' ? 1 : 0}`);
+    if (competitivo) conditions.push(`tf.Competitivo = ${competitivo === 'Sim' ? 1 : 0}`);
+
+    if (conditions.length > 0) {
+        query += ` AND ${conditions.join(' AND ')}`;
+    }
+    
+    console.log("Query SQL:", query); 
 
     sql.query(connectionString, query, (err, rows) => {
         if (err) {
@@ -67,7 +76,6 @@ app.post('/search', (req, res) => {
             return;
         }
         res.json(rows);
-        console.log("rows - " + rows)
     });
 });
 

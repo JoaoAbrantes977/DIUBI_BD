@@ -1,4 +1,4 @@
-document.getElementById('searchForm').addEventListener('submit', function (e) {
+document.getElementById('searchForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const formData = new FormData(this);
@@ -8,12 +8,13 @@ document.getElementById('searchForm').addEventListener('submit', function (e) {
         searchParams.append(pair[0], pair[1]);
     }
 
-    fetch('http://localhost:3000/search', { // Certifique-se de usar o URL correto
-        method: 'POST',
-        body: searchParams,
-    })
-    .then(response => response.json())
-    .then(data => {
+    try {
+        const response = await fetch('http://localhost:3000/search', { // Certifique-se de usar o URL correto
+            method: 'POST',
+            body: searchParams,
+        });
+
+        const data = await response.json();
         const resultsDiv = document.getElementById('results');
         resultsDiv.innerHTML = '';
 
@@ -43,6 +44,7 @@ document.getElementById('searchForm').addEventListener('submit', function (e) {
         } else {
             resultsDiv.textContent = 'Nenhum resultado encontrado.';
         }
-    })
-    .catch(error => console.error('Erro ao buscar dados:', error));
+    } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+    }
 });

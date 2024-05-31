@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node server.js"
   },
-  "name": "diubi_bd",
+  "name": "diubi_db",
   "version": "1.0.0",
   "main": "server.js",
   "author": "",

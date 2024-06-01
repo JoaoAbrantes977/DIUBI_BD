@@ -113,9 +113,7 @@ CREATE TABLE Entidade (
 	Designacao NVARCHAR(100) NOT NULL,
 	Morada NVARCHAR(100) NOT NULL,
 	URL_Online NVARCHAR(100) NOT NULL,
-    ID_Projeto INT,
-    ID_Pais INT,
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
+    ID_Pais INT ,
     FOREIGN KEY (ID_Pais) REFERENCES Pais(ID_Pais)
 );
 
@@ -124,6 +122,7 @@ CREATE TABLE Tipo_Financiamento (
 	Tipo BIT NOT NULL, --(Interno ou Externo) 1 - INTERNO / 0 - EXTERNO
 	Competitivo BIT NOT NULL, --(sim ou nao) 1 - TRUE / 0 - FALSO
     ID_Programa INT,
+	Capital INT,
     FOREIGN KEY (ID_Programa) REFERENCES Programa(ID_Programa)
 );
 
@@ -141,4 +140,12 @@ CREATE TABLE Publicacao_Identificadores (
     PRIMARY KEY (ID_Projeto, ID_Publicacao),
     FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
     FOREIGN KEY (ID_Publicacao) REFERENCES Publicacao(ID_Publicacao)
+);
+
+CREATE TABLE Projeto_Entidade (
+    ID_Projeto INT,
+    ID_Entidade INT,
+    PRIMARY KEY (ID_Projeto, ID_Entidade),
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
+    FOREIGN KEY (ID_Entidade) REFERENCES Entidade(ID_Entidade)
 );

@@ -1,0 +1,22 @@
+Inserir Entidades :
+
+{
+    "Nome": "Estado Portugues",
+    "Email": "pt@exemplo.com",
+    "Telefone": "123456789",
+    "Designacao": "Estado da Republica Portuguesa",
+    "Morada": "Rua Passos Manuel",
+    "URL_Online": "https://estado-portugues.pt/",
+    "Pais": 1
+}
+
+{
+    "Nome": "Fundação para a Ciência e a Tecnologia",
+    "Email": "ciencia@exemplo.com",
+    "Telefone": "123456789",
+    "Designacao": "Fundação para a Ciência e a Tecnologia de Portugal",
+    "Morada": " Av. Dom Carlos I",
+    "URL_Online": "https://www.fct.pt/",
+    "Pais": 1
+}
+

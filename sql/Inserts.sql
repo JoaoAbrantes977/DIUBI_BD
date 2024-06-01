@@ -96,9 +96,9 @@ VALUES
 ('Matemática');
 
 --Entidade--
-INSERT INTO Entidade (Nome, Email, Telefone, Designacao, Morada, URL_Online, ID_Projeto, ID_Pais)
+INSERT INTO Entidade (Nome, Email, Telefone, Designacao, Morada, URL_Online, ID_Pais)
 VALUES 
-('Fundação ABC', 'contacto@fundacaoabc.com', '123456789', 'Fundação ABC', 'Rua 123, Cidade X', 'http://fundacaoabc.com', 1, 1),
-('Instituto XYZ', 'contato@institutoxyz.com', '987654321', 'Instituto XYZ', 'Av. 456, Cidade Y', 'http://institutoxyz.com', 2, 2),
+('Fundação ABC', 'contacto@fundacaoabc.com', '123456789', 'Fundação ABC', 'Rua 123, Cidade X', 'http://fundacaoabc.com', 1),
+('Instituto XYZ', 'contato@institutoxyz.com', '987654321', 'Instituto XYZ', 'Av. 456, Cidade Y', 'http://institutoxyz.com', 2),
 -- Adicione mais entidades aqui.
-('Universidade DEF', 'info@universidadedef.com', '112233445', 'Universidade DEF', 'Praça 789, Cidade Z', 'http://universidadedef.com', 3, 3);
+('Universidade DEF', 'info@universidadedef.com', '112233445', 'Universidade DEF', 'Praça 789, Cidade Z', 'http://universidadedef.com',3);

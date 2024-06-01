@@ -14,8 +14,7 @@ app.use(bodyParser.json());
 app.use(cors()); // Adiciona middleware cors
 
 
-
-// Rota para o formulário de pesquisa
+// Rota para o formulário de pesquisa dinâmica de projetos
 app.post('/search', (req, res) => {
     const { nomeProjeto, tituloProjeto, dataInicio, dataFim, nomePrograma, nomePais, tipoPublicacao, valorPublicacao, nomeMembro, funcaoMembro, estadoProjeto, keyword, dominioCientifico, areaCientifica, nomeDepartamento, nomeEntidade, tipoFinanciamento, competitivo } = req.body;
 
@@ -23,16 +22,17 @@ app.post('/search', (req, res) => {
         SELECT p.Nome, p.Titulo, p.Descricao, p.Data_Inicio, p.Data_Fim
         FROM Projeto p
         LEFT JOIN Programa prg ON p.ID_Projeto = prg.ID_Projeto
-        LEFT JOIN Entidade e ON p.ID_Projeto = e.ID_Projeto
+        LEFT JOIN Projeto_Entidade pe ON p.ID_Projeto = pe.ID_Projeto
+        LEFT JOIN Entidade e ON pe.ID_Entidade = e.ID_Entidade
         LEFT JOIN Financiamento f ON p.ID_Projeto = f.ID_Projeto
         LEFT JOIN Tipo_Financiamento tf ON f.ID_Tipo_Financiamento = tf.ID_Tipo_Financiamento
         LEFT JOIN Estado est ON p.ID_Projeto = est.ID_Projeto
         LEFT JOIN Tipo_Estado te ON est.ID_Tipo_Estado = te.ID_Tipo_Estado
         LEFT JOIN Keyword_Projeto kp ON p.ID_Projeto = kp.ID_Projeto
         LEFT JOIN Keywords k ON kp.ID_Keyword = k.ID_Keyword
-        LEFT JOIN Dominio d ON p.ID_Projeto = d.ID_Tipo_Dominio
+        LEFT JOIN Dominio d ON p.ID_Projeto = d.ID_Projeto
         LEFT JOIN Tipo_Dominio td ON d.ID_Tipo_Dominio = td.ID_Tipo_Dominio
-        LEFT JOIN Area a ON p.ID_Projeto = a.ID_Area_Cientifica
+        LEFT JOIN Area a ON p.ID_Projeto = a.ID_Projeto
         LEFT JOIN Area_Cientifica ac ON a.ID_Area_Cientifica = ac.ID_Area_Cientifica
         LEFT JOIN Funcao_Membro fm ON p.ID_Projeto = fm.ID_Projeto
         LEFT JOIN Membros_DIUBI m ON fm.ID_Membro = m.ID_Membro
@@ -62,7 +62,7 @@ app.post('/search', (req, res) => {
     if (nomeEntidade) conditions.push(`e.Nome LIKE '%${nomeEntidade}%'`);
     if (tipoFinanciamento) conditions.push(`tf.Tipo = ${tipoFinanciamento === 'Interno' ? 1 : 0}`);
     if (competitivo) conditions.push(`tf.Competitivo = ${competitivo === 'Sim' ? 1 : 0}`);
-
+    
     if (conditions.length > 0) {
         query += ` AND ${conditions.join(' AND ')}`;
     }
@@ -78,6 +78,23 @@ app.post('/search', (req, res) => {
         res.json(rows);
     });
 });
+
+// Inserir uma entidade
+app.post('/entidade', (req, res) => {
+    const { Nome, Email, Telefone, Designacao, Morada, URL_Online, Pais } = req.body;
+    const query = 'INSERT INTO Entidade (Nome, Email, Telefone, Designacao, Morada, URL_Online, ID_Pais) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const values = [Nome, Email, Telefone, Designacao, Morada, URL_Online, Pais];
+
+    sql.query(connectionString, query, values, (err, rows) => {
+        if (err) {
+            console.error("Erro ao executar a consulta:", err);
+            res.status(500).json({ error: "Erro interno do servidor." });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor a correr em http://localhost:${port}`);

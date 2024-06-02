@@ -7,19 +7,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const projectName = urlParams.get('nome');
-
+            const projectName = urlParams.get('id_projeto');
+            
             try {
                 const response = await fetch('http://localhost:3000/projectDetails', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ nome: projectName }),
+                    body: JSON.stringify({ id_projeto: projectName }),
                 });
-
+               
                 const data = await response.json();
-
                 // Display the project details in the HTML
                 document.getElementById('projectName').textContent = data.Projeto_Nome;
                 document.getElementById('projectTitle').textContent = data.Projeto_Titulo;
@@ -56,11 +55,37 @@
                     document.getElementById('fundingCompetitive').textContent = "Não";
                 }
                 document.getElementById('fundingCapital').textContent = data.Tipo_Financiamento_Capital + "$";
-
             } catch (error) {
                 console.error('Erro ao buscar dados do projeto:', error);
             }
         });
+
+            
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('http://localhost:3000/allMembers');
+                const members = await response.json();
+                console.log("membros: " + members)
+                   
+                const memberDropdown = document.getElementById('memberDropdown');
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.ID_Membro;
+                    option.textContent = member.Num_Funcionario;
+                    memberDropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao procurar membros:', error);
+            }
+        });
+        
+        function openAddMemberPopup() {
+            document.getElementById('addMemberModal').style.display = 'block';
+        }
+
+        function closeAddMemberPopup() {
+            document.getElementById('addMemberModal').style.display = 'none';
+        }
     </script>
 </head>
 <body>
@@ -91,5 +116,44 @@
     <p><strong>Tipo de Financiamento:</strong> <span id="fundingType"></span></p>
     <p><strong>Financiamento Competitivo:</strong> <span id="fundingCompetitive"></span></p>
     <p><strong>Capital de Financiamento:</strong> <span id="fundingCapital"></span></p>
+    <button onclick="openAddMemberPopup()">Adicionar Membro</button>
+    <div id="addMemberModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeAddMemberPopup()" class="close">&times;</span>
+            <h2>Adicionar Membro</h2>
+            <select id="memberDropdown">
+                <option value="">Selecione um membro</option>
+            </select>
+            <button onclick="addMemberToProject()">Adicionar Membro</button>
+            </form>
+        </div>
+    </div>
 </body>
+<script>
+    async function addMemberToProject() {
+            const memberId = document.getElementById('memberDropdown').value;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectName = urlParams.get('id_projeto');
+            try {
+                const response = await fetch(`http://localhost:3000/addMemberToProject/${projectName}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ memberId }),
+                });
+
+                if (response.ok) {
+                    alert('Membro adicionado ao projeto com sucesso!');
+                } else {
+                    const errorMessage = await response.text();
+                    alert(`Erro ao adicionar membro ao projeto: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar membro ao projeto:', error);
+                alert('Erro ao adicionar membro ao projeto. Verifique o console para mais detalhes.');
+            }
+        }
+</script>
 </html>

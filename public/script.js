@@ -23,7 +23,7 @@ document.getElementById('searchForm').addEventListener('submit', async function 
             const headerRow = document.createElement('tr');
 
             // Define table headers
-            ['Nome', 'Título', 'Descrição', 'Data de Início', 'Data de Fim'].forEach(headerText => {
+            ['Id','Nome', 'Título', 'Descrição', 'Data de Início', 'Data de Fim'].forEach(headerText => {
                 const header = document.createElement('th');
                 header.textContent = headerText;
                 headerRow.appendChild(header);
@@ -34,9 +34,9 @@ document.getElementById('searchForm').addEventListener('submit', async function 
                 const rowElement = document.createElement('tr');
                 Object.entries(row).forEach(([key, cellData]) => {
                     const cell = document.createElement('td');
-                    if (key === 'Nome') {
+                    if (key === 'ID_Projeto') {
                         const link = document.createElement('a');
-                        link.href = `projectDetails.html?nome=${encodeURIComponent(cellData)}`;
+                        link.href = `projectDetails.html?id_projeto=${encodeURIComponent(cellData)}`;
                         link.textContent = cellData;
                         cell.appendChild(link);
                     } else {

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="style.css">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <title>Todos os Projetos</title>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
@@ -23,7 +23,7 @@
                     const nameCell = document.createElement('td');
                     const nameLink = document.createElement('a');
                     nameLink.textContent = project.Projeto_Nome;
-                    nameLink.href = `projectDetails.html?nome=${encodeURIComponent(project.Projeto_Nome)}`;
+                    nameLink.href = `projectDetails.html?id_projeto=${encodeURIComponent(project.ID_Projeto)}`;
                     nameCell.appendChild(nameLink);
 
                     const titleCell = document.createElement('td');

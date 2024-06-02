@@ -18,27 +18,27 @@ app.post('/search', (req, res) => {
     const { nomeProjeto, tituloProjeto, dataInicio, dataFim, nomePrograma, nomePais, tipoPublicacao, valorPublicacao, nomeMembro, funcaoMembro, estadoProjeto, keyword, dominioCientifico, areaCientifica, nomeDepartamento, nomeEntidade, tipoFinanciamento, competitivo } = req.body;
 
     let query = `
-        SELECT p.Nome, p.Titulo, p.Descricao, p.Data_Inicio, p.Data_Fim
-        FROM Projeto p
-        LEFT JOIN Programa prg ON p.ID_Projeto = prg.ID_Projeto
-        LEFT JOIN Projeto_Entidade pe ON p.ID_Projeto = pe.ID_Projeto
-        LEFT JOIN Entidade e ON pe.ID_Entidade = e.ID_Entidade
-        LEFT JOIN Financiamento f ON p.ID_Projeto = f.ID_Projeto
-        LEFT JOIN Tipo_Financiamento tf ON f.ID_Tipo_Financiamento = tf.ID_Tipo_Financiamento
-        LEFT JOIN Estado est ON p.ID_Projeto = est.ID_Projeto
-        LEFT JOIN Tipo_Estado te ON est.ID_Tipo_Estado = te.ID_Tipo_Estado
-        LEFT JOIN Keyword_Projeto kp ON p.ID_Projeto = kp.ID_Projeto
-        LEFT JOIN Keywords k ON kp.ID_Keyword = k.ID_Keyword
-        LEFT JOIN Dominio d ON p.ID_Projeto = d.ID_Projeto
-        LEFT JOIN Tipo_Dominio td ON d.ID_Tipo_Dominio = td.ID_Tipo_Dominio
-        LEFT JOIN Area a ON p.ID_Projeto = a.ID_Projeto
-        LEFT JOIN Area_Cientifica ac ON a.ID_Area_Cientifica = ac.ID_Area_Cientifica
-        LEFT JOIN Funcao_Membro fm ON p.ID_Projeto = fm.ID_Projeto
-        LEFT JOIN Membros_DIUBI m ON fm.ID_Membro = m.ID_Membro
-        LEFT JOIN Departamento_Investigacao di ON m.ID_Membro = di.ID_Membro
-        LEFT JOIN Departamento dep ON di.ID_Departamento = dep.ID_Departamento
-        LEFT JOIN Pais pais ON e.ID_Pais = pais.ID_Pais
-        WHERE 1=1
+    SELECT  DISTINCT p.ID_Projeto, p.Nome, p.Titulo, CAST(p.Descricao AS NVARCHAR(MAX)), p.Data_Inicio, p.Data_Fim
+    FROM Projeto p
+    LEFT JOIN Programa prg ON p.ID_Projeto = prg.ID_Projeto
+    LEFT JOIN Projeto_Entidade pe ON p.ID_Projeto = pe.ID_Projeto
+    LEFT JOIN Entidade e ON pe.ID_Entidade = e.ID_Entidade
+    LEFT JOIN Financiamento f ON p.ID_Projeto = f.ID_Projeto
+    LEFT JOIN Tipo_Financiamento tf ON f.ID_Tipo_Financiamento = tf.ID_Tipo_Financiamento
+    LEFT JOIN Estado est ON p.ID_Projeto = est.ID_Projeto
+    LEFT JOIN Tipo_Estado te ON est.ID_Tipo_Estado = te.ID_Tipo_Estado
+    LEFT JOIN Keyword_Projeto kp ON p.ID_Projeto = kp.ID_Projeto
+    LEFT JOIN Keywords k ON kp.ID_Keyword = k.ID_Keyword
+    LEFT JOIN Dominio d ON p.ID_Projeto = d.ID_Projeto
+    LEFT JOIN Tipo_Dominio td ON d.ID_Tipo_Dominio = td.ID_Tipo_Dominio
+    LEFT JOIN Area a ON p.ID_Projeto = a.ID_Projeto
+    LEFT JOIN Area_Cientifica ac ON a.ID_Area_Cientifica = ac.ID_Area_Cientifica
+    LEFT JOIN Funcao_Membro fm ON p.ID_Projeto = fm.ID_Projeto
+    LEFT JOIN Membros_DIUBI m ON fm.ID_Membro = m.ID_Membro
+    LEFT JOIN Departamento_Investigacao di ON m.ID_Membro = di.ID_Membro
+    LEFT JOIN Departamento dep ON di.ID_Departamento = dep.ID_Departamento
+    LEFT JOIN Pais pais ON e.ID_Pais = pais.ID_Pais
+    WHERE 1=1
     `;
 
     const conditions = [];
@@ -80,7 +80,7 @@ app.post('/search', (req, res) => {
 
 // Obter toda a informação de um unico projeto
 app.post('/projectDetails', (req, res) => {
-    const { nome } = req.body;
+    const { id_projeto } = req.body;
 
     const query = `
         SELECT 
@@ -153,10 +153,10 @@ app.post('/projectDetails', (req, res) => {
         LEFT JOIN 
             Publicacao pub ON pi.ID_Publicacao = pub.ID_Publicacao
         WHERE 
-         p.Nome = ?
+         p.ID_Projeto = ?
     `;
 
-    sql.query(connectionString, query, [nome], (err, rows) => {
+    sql.query(connectionString, query, [id_projeto], (err, rows) => {
         if (err) {
             console.error('Erro ao buscar detalhes do projeto:', err);
             res.status(500).json({ error: 'Erro interno do servidor.' });
@@ -176,6 +176,7 @@ app.post('/projectDetails', (req, res) => {
 app.get('/allProjects', (req, res) => {
     const query = `
         SELECT 
+            p.ID_Projeto,
             p.Nome AS Projeto_Nome,
             p.Titulo AS Projeto_Titulo,
             p.Descricao AS Projeto_Descricao,
@@ -210,6 +211,39 @@ app.post('/entidade', (req, res) => {
         }
         res.json(rows);
     });
+});
+
+app.get('/allMembers', async (req, res) => {
+    try {
+        sql.query(connectionString, 'SELECT * FROM Membros_DIUBI', (err, rows) => {
+            if (err) {
+                console.error('Erro ao procurar membros:', err);
+                res.status(500).json({ message: 'Erro ao procurar membros' });
+                return;
+            }
+            res.json(rows);
+        });
+    } catch (error) {
+        console.error('Erro ao procurar membros:', error);
+        res.status(500).json({ message: 'Erro ao procurar membros' });
+    }
+});
+
+//Inserir um membro num projeto
+app.patch('/addMemberToProject/:projectId', async (req, res) => {
+    const projectID = req.params.projectId;
+    const { memberId} = req.body;
+
+     let query = `INSERT INTO Funcao_Membro (ID_Projeto, ID_Membro) VALUES (?, ?)`;
+
+    try {
+        await sql.query(connectionString, query, [projectID, memberId]);
+
+        res.status(200).json({ message: 'Membro adicionado ao projeto com sucesso' });
+    } catch (error) {
+        console.error('Erro ao adicionar membro ao projeto:', error);
+        res.status(500).json({ message: 'Erro ao adicionar membro ao projeto' });
+    }
 });
 
 app.listen(port, () => {

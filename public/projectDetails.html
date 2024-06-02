@@ -18,6 +18,7 @@
                 });
 
                 const data = await response.json();
+
                 // Display the project details in the HTML
                 document.getElementById('projectName').textContent = data.Projeto_Nome;
                 document.getElementById('projectTitle').textContent = data.Projeto_Titulo;
@@ -42,9 +43,19 @@
                 document.getElementById('entityDesignation').textContent = data.Entidade_Designacao;
                 document.getElementById('entityAddress').textContent = data.Entidade_Morada;
                 document.getElementById('entityUrl').textContent = data.Entidade_URL_Online;
-                document.getElementById('fundingType').textContent = data.Tipo_Financiamento_Tipo;
-                document.getElementById('fundingCompetitive').textContent = data.Tipo_Financiamento_Competitivo;
+                if(data.Tipo_Financiamento_Tipo == 1){
+                    document.getElementById('fundingType').textContent = "Interno";
+                }else{
+                    document.getElementById('fundingType').textContent = "Externo";
+                }
+
+                if(data.Tipo_Financiamento_Competitivo == 1){
+                    document.getElementById('fundingCompetitive').textContent = "Sim";
+                }else{
+                    document.getElementById('fundingCompetitive').textContent = "Não";
+                }
                 document.getElementById('fundingCapital').textContent = data.Tipo_Financiamento_Capital;
+
             } catch (error) {
                 console.error('Erro ao buscar dados do projeto:', error);
             }

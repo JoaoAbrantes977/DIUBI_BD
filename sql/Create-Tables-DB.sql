@@ -11,7 +11,7 @@ CREATE TABLE Programa (
     ID_Programa INT PRIMARY KEY IDENTITY(1,1),
 	Nome_Programa NVARCHAR(100),
     ID_Projeto INT,
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE
 );
 
 CREATE TABLE Pais (
@@ -52,6 +52,7 @@ CREATE TABLE Area_Cientifica (
 	ID_Area_Cientifica INT PRIMARY KEY IDENTITY(1,1),
 	Area_Cientifica NVARCHAR(30) NOT NULL
 );
+
 CREATE TABLE Departamento (
 	ID_Departamento INT PRIMARY KEY IDENTITY(1,1),
 	Nome_Departamento NVARCHAR(30) NOT NULL
@@ -61,48 +62,48 @@ CREATE TABLE Estado (
     ID_Projeto INT,
     ID_Tipo_Estado INT,
     PRIMARY KEY (ID_Projeto, ID_Tipo_Estado),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Tipo_Estado) REFERENCES Tipo_Estado(ID_Tipo_Estado)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Tipo_Estado) REFERENCES Tipo_Estado(ID_Tipo_Estado) ON DELETE CASCADE
 );
 
 CREATE TABLE Keyword_Projeto (
     ID_Projeto INT,
     ID_Keyword INT,
     PRIMARY KEY (ID_Projeto, ID_Keyword),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Keyword) REFERENCES Keywords(ID_Keyword)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Keyword) REFERENCES Keywords(ID_Keyword) ON DELETE CASCADE
 );
 
 CREATE TABLE Dominio (
     ID_Projeto INT,
     ID_Tipo_Dominio INT,
     PRIMARY KEY (ID_Projeto, ID_Tipo_Dominio),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Tipo_Dominio) REFERENCES Tipo_Dominio(ID_Tipo_Dominio)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Tipo_Dominio) REFERENCES Tipo_Dominio(ID_Tipo_Dominio) ON DELETE CASCADE
 );
 
 CREATE TABLE Area (
     ID_Projeto INT,
     ID_Area_Cientifica INT,
     PRIMARY KEY (ID_Projeto, ID_Area_Cientifica),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Area_Cientifica) REFERENCES Area_Cientifica(ID_Area_Cientifica)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Area_Cientifica) REFERENCES Area_Cientifica(ID_Area_Cientifica) ON DELETE CASCADE
 );
 
 CREATE TABLE Departamento_Investigacao (
     ID_Membro INT,
     ID_Departamento INT,
     PRIMARY KEY (ID_Membro, ID_Departamento),
-    FOREIGN KEY (ID_Membro) REFERENCES Membros_DIUBI(ID_Membro),
-    FOREIGN KEY (ID_Departamento) REFERENCES Departamento(ID_Departamento)
+    FOREIGN KEY (ID_Membro) REFERENCES Membros_DIUBI(ID_Membro) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Departamento) REFERENCES Departamento(ID_Departamento) ON DELETE CASCADE
 );
 
 CREATE TABLE Funcao_Membro (
     ID_Projeto INT,
     ID_Membro INT,
     PRIMARY KEY (ID_Projeto, ID_Membro),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Membro) REFERENCES Membros_DIUBI(ID_Membro)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Membro) REFERENCES Membros_DIUBI(ID_Membro) ON DELETE CASCADE
 );
 
 CREATE TABLE Entidade (
@@ -113,8 +114,8 @@ CREATE TABLE Entidade (
 	Designacao NVARCHAR(100) NOT NULL,
 	Morada NVARCHAR(100) NOT NULL,
 	URL_Online NVARCHAR(100) NOT NULL,
-    ID_Pais INT ,
-    FOREIGN KEY (ID_Pais) REFERENCES Pais(ID_Pais)
+    ID_Pais INT,
+    FOREIGN KEY (ID_Pais) REFERENCES Pais(ID_Pais) ON DELETE CASCADE
 );
 
 CREATE TABLE Tipo_Financiamento (
@@ -123,7 +124,7 @@ CREATE TABLE Tipo_Financiamento (
 	Competitivo BIT NOT NULL, --(sim ou nao) 1 - TRUE / 0 - FALSO
     ID_Programa INT,
 	Capital INT,
-    FOREIGN KEY (ID_Programa) REFERENCES Programa(ID_Programa)
+    FOREIGN KEY (ID_Programa) REFERENCES Programa(ID_Programa) ON DELETE CASCADE
 );
 
 CREATE TABLE Financiamento (
@@ -131,21 +132,21 @@ CREATE TABLE Financiamento (
     ID_Tipo_Financiamento INT,
     PRIMARY KEY (ID_Projeto, ID_Tipo_Financiamento),
     FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Tipo_Financiamento) REFERENCES Tipo_Financiamento(ID_Tipo_Financiamento)
+    FOREIGN KEY (ID_Tipo_Financiamento) REFERENCES Tipo_Financiamento(ID_Tipo_Financiamento) 
 );
 
 CREATE TABLE Publicacao_Identificadores (
     ID_Projeto INT,
     ID_Publicacao INT,
     PRIMARY KEY (ID_Projeto, ID_Publicacao),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Publicacao) REFERENCES Publicacao(ID_Publicacao)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Publicacao) REFERENCES Publicacao(ID_Publicacao) ON DELETE CASCADE
 );
 
 CREATE TABLE Projeto_Entidade (
     ID_Projeto INT,
     ID_Entidade INT,
     PRIMARY KEY (ID_Projeto, ID_Entidade),
-    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto),
-    FOREIGN KEY (ID_Entidade) REFERENCES Entidade(ID_Entidade)
+    FOREIGN KEY (ID_Projeto) REFERENCES Projeto(ID_Projeto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Entidade) REFERENCES Entidade(ID_Entidade) ON DELETE CASCADE
 );

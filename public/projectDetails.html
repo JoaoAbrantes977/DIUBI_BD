@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalhes do Projeto</title>
+    <link rel="stylesheet" href="style.css">
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
             const urlParams = new URLSearchParams(window.location.search);
@@ -54,7 +55,7 @@
                 }else{
                     document.getElementById('fundingCompetitive').textContent = "Não";
                 }
-                document.getElementById('fundingCapital').textContent = data.Tipo_Financiamento_Capital;
+                document.getElementById('fundingCapital').textContent = data.Tipo_Financiamento_Capital + "$";
 
             } catch (error) {
                 console.error('Erro ao buscar dados do projeto:', error);

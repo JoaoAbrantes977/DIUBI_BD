@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Projeto</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectName = urlParams.get('nome');
+
+            try {
+                const response = await fetch('http://localhost:3000/projectDetails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nome: projectName }),
+                });
+
+                const data = await response.json();
+                // Display the project details in the HTML
+                document.getElementById('projectName').textContent = data.Projeto_Nome;
+                document.getElementById('projectTitle').textContent = data.Projeto_Titulo;
+                document.getElementById('projectDescription').textContent = data.Projeto_Descricao;
+                document.getElementById('projectStartDate').textContent = data.Projeto_Data_Inicio;
+                document.getElementById('projectEndDate').textContent = data.Projeto_Data_Fim;
+                document.getElementById('programName').textContent = data.Nome_Programa;
+                document.getElementById('countryName').textContent = data.Nome_do_Pais;
+                document.getElementById('publicationType').textContent = data.Publicacao_Tipo;
+                document.getElementById('publicationValue').textContent = data.Publicacao_Valor;
+                document.getElementById('memberNumber').textContent = data.Num_Funcionario;
+                document.getElementById('memberOrcid').textContent = data.ORCID;
+                document.getElementById('memberRole').textContent = data.Funcao;
+                document.getElementById('state').textContent = data.Estado;
+                document.getElementById('keyword').textContent = data.Keyword;
+                document.getElementById('scientificDomain').textContent = data.Dominio_Cientifico;
+                document.getElementById('scientificArea').textContent = data.Area_Cientifica;
+                document.getElementById('departmentName').textContent = data.Nome_Departamento;
+                document.getElementById('entityName').textContent = data.Entidade_Nome;
+                document.getElementById('entityEmail').textContent = data.Entidade_Email;
+                document.getElementById('entityPhone').textContent = data.Entidade_Telefone;
+                document.getElementById('entityDesignation').textContent = data.Entidade_Designacao;
+                document.getElementById('entityAddress').textContent = data.Entidade_Morada;
+                document.getElementById('entityUrl').textContent = data.Entidade_URL_Online;
+                document.getElementById('fundingType').textContent = data.Tipo_Financiamento_Tipo;
+                document.getElementById('fundingCompetitive').textContent = data.Tipo_Financiamento_Competitivo;
+                document.getElementById('fundingCapital').textContent = data.Tipo_Financiamento_Capital;
+            } catch (error) {
+                console.error('Erro ao buscar dados do projeto:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Detalhes do Projeto</h1>
+    <p><strong>Nome do Projeto:</strong> <span id="projectName"></span></p>
+    <p><strong>Título do Projeto:</strong> <span id="projectTitle"></span></p>
+    <p><strong>Descrição do Projeto:</strong> <span id="projectDescription"></span></p>
+    <p><strong>Data de Início:</strong> <span id="projectStartDate"></span></p>
+    <p><strong>Data de Fim:</strong> <span id="projectEndDate"></span></p>
+    <p><strong>Nome do Programa:</strong> <span id="programName"></span></p>
+    <p><strong>Nome do País:</strong> <span id="countryName"></span></p>
+    <p><strong>Tipo de Publicação:</strong> <span id="publicationType"></span></p>
+    <p><strong>Valor da Publicação:</strong> <span id="publicationValue"></span></p>
+    <p><strong>Número do Funcionário:</strong> <span id="memberNumber"></span></p>
+    <p><strong>ORCID:</strong> <span id="memberOrcid"></span></p>
+    <p><strong>Função:</strong> <span id="memberRole"></span></p>
+    <p><strong>Estado:</strong> <span id="state"></span></p>
+    <p><strong>Keyword:</strong> <span id="keyword"></span></p>
+    <p><strong>Domínio Científico:</strong> <span id="scientificDomain"></span></p>
+    <p><strong>Área Científica:</strong> <span id="scientificArea"></span></p>
+    <p><strong>Nome do Departamento:</strong> <span id="departmentName"></span></p>
+    <p><strong>Nome da Entidade:</strong> <span id="entityName"></span></p>
+    <p><strong>Email da Entidade:</strong> <span id="entityEmail"></span></p>
+    <p><strong>Telefone da Entidade:</strong> <span id="entityPhone"></span></p>
+    <p><strong>Designação da Entidade:</strong> <span id="entityDesignation"></span></p>
+    <p><strong>Morada da Entidade:</strong> <span id="entityAddress"></span></p>
+    <p><strong>URL Online da Entidade:</strong> <span id="entityUrl"></span></p>
+    <p><strong>Tipo de Financiamento:</strong> <span id="fundingType"></span></p>
+    <p><strong>Financiamento Competitivo:</strong> <span id="fundingCompetitive"></span></p>
+    <p><strong>Capital de Financiamento:</strong> <span id="fundingCapital"></span></p>
+</body>
+</html>

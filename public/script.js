@@ -9,7 +9,7 @@ document.getElementById('searchForm').addEventListener('submit', async function 
     }
 
     try {
-        const response = await fetch('http://localhost:3000/search', { // Certifique-se de usar o URL correto
+        const response = await fetch('http://localhost:3000/search', {
             method: 'POST',
             body: searchParams,
         });
@@ -22,7 +22,7 @@ document.getElementById('searchForm').addEventListener('submit', async function 
             const table = document.createElement('table');
             const headerRow = document.createElement('tr');
 
-            // Defina os cabeçalhos da tabela
+            // Define table headers
             ['Nome', 'Título', 'Descrição', 'Data de Início', 'Data de Fim'].forEach(headerText => {
                 const header = document.createElement('th');
                 header.textContent = headerText;
@@ -32,9 +32,16 @@ document.getElementById('searchForm').addEventListener('submit', async function 
 
             data.forEach(row => {
                 const rowElement = document.createElement('tr');
-                Object.values(row).forEach(cellData => {
+                Object.entries(row).forEach(([key, cellData]) => {
                     const cell = document.createElement('td');
-                    cell.textContent = cellData;
+                    if (key === 'Nome') {
+                        const link = document.createElement('a');
+                        link.href = `projectDetails.html?nome=${encodeURIComponent(cellData)}`;
+                        link.textContent = cellData;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = cellData;
+                    }
                     rowElement.appendChild(cell);
                 });
                 table.appendChild(rowElement);

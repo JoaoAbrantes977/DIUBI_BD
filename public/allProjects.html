@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todos os Projetos</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('http://localhost:3000/allProjects', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const projects = await response.json();
+                const tableBody = document.getElementById('projectsTableBody');
+
+                projects.forEach(project => {
+                    const row = document.createElement('tr');
+
+                    const nameCell = document.createElement('td');
+                    const nameLink = document.createElement('a');
+                    nameLink.textContent = project.Projeto_Nome;
+                    nameLink.href = `projectDetails.html?nome=${encodeURIComponent(project.Projeto_Nome)}`;
+                    nameCell.appendChild(nameLink);
+
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = project.Projeto_Titulo;
+
+                    const descriptionCell = document.createElement('td');
+                    descriptionCell.textContent = project.Projeto_Descricao;
+
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = project.Projeto_Data_Inicio;
+
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = project.Projeto_Data_Fim;
+
+                    row.appendChild(nameCell);
+                    row.appendChild(titleCell);
+                    row.appendChild(descriptionCell);
+                    row.appendChild(startDateCell);
+                    row.appendChild(endDateCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados dos projetos:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Todos os Projetos</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome do Projeto</th>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Data de Início</th>
+                <th>Data de Fim</th>
+            </tr>
+        </thead>
+        <tbody id="projectsTableBody">
+            <!-- Projects will be populated here -->
+        </tbody>
+    </table>
+</body>
+</html>

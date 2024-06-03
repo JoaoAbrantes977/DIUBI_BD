@@ -246,6 +246,85 @@ app.patch('/addMemberToProject/:projectId', async (req, res) => {
     }
 });
 
+// Inserir financiadores
+app.post('/financiadores', (req, res) => {
+    const { Tipo, Competitivo, Capital, ID_Programa } = req.body;
+
+    // Convert Tipo and Competitivo to boolean values
+    const tipoAsBoolean = parseInt(Tipo) === 1 ? 1 : 0; 
+    const competitivoAsBoolean = parseInt(Competitivo) === 1 ? 1 : 0;
+
+    // Parse ID_Programa and Capital as integers
+    const parsedID_Programa = parseInt(ID_Programa);
+    const parsedCapital = parseInt(Capital);
+    
+    const query = 'INSERT INTO Tipo_Financiamento (Tipo, Competitivo, ID_Programa, Capital) VALUES (?, ?, ?, ?)';
+    const values = [tipoAsBoolean, competitivoAsBoolean, parsedID_Programa, parsedCapital];
+    
+    sql.query(connectionString, query, values, (err, rows) => {
+        if (err) {
+            console.error("Erro ao executar a consulta:", err);
+            res.status(500).json({ error: "Erro interno do servidor." });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+// Obter funcionario por num de funcionario
+app.post('/funcionario', (req, res) => {
+    const { funcionarioId } = req.body;
+    const values = [ parseInt(funcionarioId)]; 
+    const query = `
+        SELECT 
+            m.Num_Funcionario,
+            m.ORCID,
+            m.Funcao,
+            p.Nome,
+            p.Titulo,
+            p.Descricao,
+            p.Data_Inicio,
+            p.Data_Fim
+        FROM 
+            Membros_DIUBI m
+        INNER JOIN 
+            Funcao_Membro fm ON m.ID_Membro = fm.ID_Membro
+        INNER JOIN 
+            Projeto p ON fm.ID_Projeto = p.ID_Projeto
+        WHERE 
+            m.Num_Funcionario = ? ;
+    `;
+
+    sql.query(connectionString, query, values, (err, rows) => {
+        if (err) {
+            console.error('Erro ao buscar todos os projetos:', err);
+            res.status(500).json({ error: 'Erro interno do servidor.' });
+            return;
+        }
+
+        res.json(rows);
+    });
+});
+
+app.get('/projectsByYear', async (req, res) => {
+
+    const query = 'SELECT YEAR(Data_Inicio) AS Ano, COUNT(*) AS Num_Projetos FROM Projeto GROUP BY YEAR(Data_Inicio)';
+
+    try {
+        sql.query(connectionString, query, (err, rows) => {
+            if (err) {
+                console.error('Erro ao procurar membros:', err);
+                res.status(500).json({ message: 'Erro ao procurar membros' });
+                return;
+            }
+            res.json(rows);
+        });
+    } catch (error) {
+        console.error('Erro ao procurar membros:', error);
+        res.status(500).json({ message: 'Erro ao procurar membros' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Servidor a correr em http://localhost:${port}`);
 });

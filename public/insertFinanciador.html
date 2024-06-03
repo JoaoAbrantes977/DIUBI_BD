@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Formulário de Financiadores</title>
+</head>
+<body>
+    <h1>Inserir Financiador</h1>
+    <form id="financiadorForm">
+        <label for="Tipo">Tipo (1-Interno 0-Externo):</label><br>
+        <input type="number" id="Tipo" name="Tipo" min="0" max="1" required><br>
+
+        <label for="Competitivo">Competitivo (1-Sim 0-Não):</label><br>
+        <input type="number" id="Competitivo" name="Competitivo" min="0" max="1" required><br>
+
+        <label for="Capital">Capital:</label><br>
+        <input type="text" id="Capital" name="Capital" required><br>
+
+        <label for="ID_Programa">Programa:</label><br>
+        <input type="number" id="ID_Programa" name="ID_Programa" required><br>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById('financiadorForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => (data[key] = value === '1'));
+
+            fetch('http://localhost:3000/financiadores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Financiador inserido com sucesso!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Erro ao inserir o financiador.');
+            });
+        });
+    </script>
+</body>
+</html>

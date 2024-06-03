@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Funcionario Projects</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Search Projects by Funcionario ID</h1>
+    <form id="searchForm">
+        <label for="funcionarioId">Funcionario ID:</label>
+        <input type="number" id="funcionarioId" name="funcionarioId" required>
+        <button type="button" onclick="searchProjects()">Search</button>
+    </form>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Num Funcionario</th>
+                <th>ORCID</th>
+                <th>Funcao</th>
+                <th>Nome</th>
+                <th>Titulo</th>
+                <th>Descricao</th>
+                <th>Data Inicio</th>
+                <th>Data Fim</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+        </tbody>
+    </table>
+    <script>
+        async function searchProjects() {
+            const funcionarioId = document.getElementById('funcionarioId').value;
+            if (!funcionarioId) return;
+            
+            const response = await fetch('http://localhost:3000/funcionario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ funcionarioId: funcionarioId })
+            });
+
+            if (response.ok) {
+                const results = await response.json();
+                displayResults(results);
+            } else {
+                alert('Error fetching data');
+            }
+        }
+
+        function displayResults(results) {
+            const resultsBody = document.getElementById('resultsBody');
+            resultsBody.innerHTML = ''; // Clear previous results
+
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.Num_Funcionario}</td>
+                    <td>${result.ORCID}</td>
+                    <td>${result.Funcao}</td>
+                    <td>${result.Nome}</td>
+                    <td>${result.Titulo}</td>
+                    <td>${result.Descricao}</td>
+                    <td>${result.Data_Inicio}</td>
+                    <td>${result.Data_Fim}</td>
+                `;
+                resultsBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

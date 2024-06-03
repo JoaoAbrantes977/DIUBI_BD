@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects by Year</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Número de Projetos por Ano</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ano</th>
+                <th>Número de Projetos</th>
+            </tr>
+        </thead>
+        <tbody id="projectsTableBody">
+            <!-- Data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch data from the server
+        fetch('http://localhost:3000/projectsByYear')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('projectsTableBody');
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.Ano}</td>
+                        <td>${row.Num_Projetos}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>

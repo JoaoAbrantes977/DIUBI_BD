@@ -213,6 +213,22 @@ app.post('/entidade', (req, res) => {
     });
 });
 
+// Inserir uma entidade
+app.post('/projeto', (req, res) => {
+    const {Nome, Titulo, Descricao, Data_Inicio, Data_Fim} = req.body;
+    const query = 'INSERT INTO Projeto (Nome, Titulo, Descricao, Data_inicio, Data_Fim) VALUES (?, ?, ?, ?, ?)';
+    const values = [Nome, Titulo, Descricao, Data_Inicio, Data_Fim];
+
+    sql.query(connectionString, query, values, (err, rows) => {
+        if (err) {
+            console.error("Erro ao executar a consulta:", err);
+            res.status(500).json({ error: "Erro interno do servidor." });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
 app.get('/allMembers', async (req, res) => {
     try {
         sql.query(connectionString, 'SELECT * FROM Membros_DIUBI', (err, rows) => {

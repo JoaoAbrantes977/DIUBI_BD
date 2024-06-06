@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>button {width: 50%;}</style>
+    <title>Formulário Projeto</title>
+</head>
+<body>
+    <h1>Inserir Projeto</h1>
+    <form id="projetoForm">
+        <label for="Nome">Nome:</label><br>
+        <input type="text" id="Nome" name="Nome" required><br>
+
+        <label for="Titulo">Titulo:</label><br>
+        <input type="text" id="Titulo" name="Titulo" required><br>
+
+        <label for="Descricao">Descricao:</label><br>
+        <textarea id="Descricao" name="Descricao" required></textarea><br>
+
+        <label for="Data_Inicio">Data Início:</label><br>
+        <input type="date" id="Data_Inicio" name="Data_Inicio"><br>
+
+        <label for="Data_Fim">Data Fim:</label><br>
+        <input type="date" id="Data_Fim" name="Data_Fim"><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById('projetoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => (data[key] = value));
+
+            fetch('http://localhost:3000/projeto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Projeto inserido com sucesso!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Erro ao inserir o projeto.');
+            });
+        });
+    </script>
+</body>
+</html>
+

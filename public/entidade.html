@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Todas as Entidades</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('http://localhost:3000/getEntidades', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const entidades = await response.json();
+                const tableBody = document.getElementById('entidadesTableBody');
+
+                entidades.forEach(entidade => {
+                    const row = document.createElement('tr');
+
+                    const nomeCell = document.createElement('td');
+                    nomeCell.textContent = entidade.Nome;
+
+                    const emailCell = document.createElement('td');
+                    emailCell.textContent = entidade.Email;
+
+                    const telefoneCell = document.createElement('td');
+                    telefoneCell.textContent = entidade.Telefone;
+
+                    const designacaoCell = document.createElement('td');
+                    designacaoCell.textContent = entidade.Designacao;
+
+                    const moradaCell = document.createElement('td');
+                    moradaCell.textContent = entidade.Morada;
+
+                    const urlCell = document.createElement('td');
+                    const urlLink = document.createElement('a');
+                    urlLink.textContent = entidade.URL_Online;
+                    urlLink.href = entidade.URL_Online;
+                    urlCell.appendChild(urlLink);
+
+                    const idPaisCell = document.createElement('td');
+                    idPaisCell.textContent = entidade.ID_Pais;
+
+                    row.appendChild(nomeCell);
+                    row.appendChild(emailCell);
+                    row.appendChild(telefoneCell);
+                    row.appendChild(designacaoCell);
+                    row.appendChild(moradaCell);
+                    row.appendChild(urlCell);
+                    row.appendChild(idPaisCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados das entidades:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Todas as Entidades</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Designação</th>
+                <th>Morada</th>
+                <th>URL Online</th>
+                <th>ID País</th>
+            </tr>
+        </thead>
+        <tbody id="entidadesTableBody">
+            <!-- Entidades serão populadas aqui -->
+        </tbody>
+    </table>
+</body>
+</html>

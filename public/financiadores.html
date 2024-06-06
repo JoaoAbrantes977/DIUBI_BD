@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Todos os Financiadores</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('http://localhost:3000/getFinanciadores', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const financiadores = await response.json();
+                const tableBody = document.getElementById('financiadoresTableBody');
+
+                financiadores.forEach(financiador => {
+                    const row = document.createElement('tr');
+
+                    const tipoCell = document.createElement('td');
+                    tipoCell.textContent = financiador.Tipo === 1 ? 'Interno' : 'Externo';
+
+                    const competitivoCell = document.createElement('td');
+                    competitivoCell.textContent = financiador.Competitivo ? 'Sim' : 'Não';
+
+                    const programaCell = document.createElement('td');
+                    programaCell.textContent = financiador.ID_Programa;
+
+                    const capitalCell = document.createElement('td');
+                    capitalCell.textContent = financiador.Capital;
+
+                    row.appendChild(tipoCell);
+                    row.appendChild(competitivoCell);
+                    row.appendChild(programaCell);
+                    row.appendChild(capitalCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados dos financiadores:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Todos os Financiadores</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Competitivo</th>
+                <th>ID do Programa</th>
+                <th>Capital</th>
+            </tr>
+        </thead>
+        <tbody id="financiadoresTableBody">
+            <!-- Financiadores serão populados aqui -->
+        </tbody>
+    </table>
+</body>
+</html>

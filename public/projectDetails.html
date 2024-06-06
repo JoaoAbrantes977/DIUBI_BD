@@ -19,6 +19,7 @@
                 });
                
                 const data = await response.json();
+
                 // Display the project details in the HTML
                 document.getElementById('projectName').textContent = data.Projeto_Nome;
                 document.getElementById('projectTitle').textContent = data.Projeto_Titulo;
@@ -29,7 +30,7 @@
                 document.getElementById('countryName').textContent = data.Nome_do_Pais;
                 document.getElementById('publicationType').textContent = data.Publicacao_Tipo;
                 document.getElementById('publicationValue').textContent = data.Publicacao_Valor;
-                document.getElementById('memberNumber').textContent = data.Num_Funcionario;
+                document.getElementById('memberNumber').textContent = data.Todos_Num_Funcionario;
                 document.getElementById('memberOrcid').textContent = data.ORCID;
                 document.getElementById('memberRole').textContent = data.Funcao;
                 document.getElementById('state').textContent = data.Estado;
@@ -65,7 +66,6 @@
             try {
                 const response = await fetch('http://localhost:3000/allMembers');
                 const members = await response.json();
-                console.log("membros: " + members)
                    
                 const memberDropdown = document.getElementById('memberDropdown');
                 members.forEach(member => {

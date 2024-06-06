@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 // Configuração de conexão
-const connectionString = "Driver={SQL Server};Server=LAPTOP-73LR98JM\\SQLEXPRESS;Database=DIUBI_DB;Trusted_Connection=Yes;";
+const connectionString = "Driver={SQL Server};Server=LAPTOP-73LR98JM\\SQLEXPRESS;Database=DIUBI;Trusted_Connection=Yes;";
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -109,7 +109,13 @@ app.post('/projectDetails', (req, res) => {
             e.URL_Online AS Entidade_URL_Online,
             tf.Tipo AS Tipo_Financiamento_Tipo,
             tf.Competitivo AS Tipo_Financiamento_Competitivo,
-            tf.Capital AS Tipo_Financiamento_Capital
+            tf.Capital AS Tipo_Financiamento_Capital,
+            STUFF((
+            SELECT ', ' + CONVERT(VARCHAR(10), m2.Num_Funcionario)
+                FROM Membros_DIUBI m2
+                INNER JOIN Funcao_Membro fm2 ON m2.ID_Membro = fm2.ID_Membro
+                WHERE p.ID_Projeto = fm2.ID_Projeto
+                FOR XML PATH('')), 1, 2, '') AS Todos_Num_Funcionario
         FROM 
             Projeto p
         LEFT JOIN 
@@ -213,6 +219,20 @@ app.post('/entidade', (req, res) => {
     });
 });
 
+app.get('/getEntidades', (req, res) => {
+    const query = `SELECT * FROM Entidade`;
+
+    sql.query(connectionString, query, (err, rows) => {
+        if (err) {
+            console.error('Erro ao buscar todos os projetos:', err);
+            res.status(500).json({ error: 'Erro interno do servidor.' });
+            return;
+        }
+
+        res.json(rows);
+    });
+});
+
 // Inserir uma entidade
 app.post('/projeto', (req, res) => {
     const {Nome, Titulo, Descricao, Data_Inicio, Data_Fim} = req.body;
@@ -266,16 +286,9 @@ app.patch('/addMemberToProject/:projectId', async (req, res) => {
 app.post('/financiadores', (req, res) => {
     const { Tipo, Competitivo, Capital, ID_Programa } = req.body;
 
-    // Convert Tipo and Competitivo to boolean values
-    const tipoAsBoolean = parseInt(Tipo) === 1 ? 1 : 0; 
-    const competitivoAsBoolean = parseInt(Competitivo) === 1 ? 1 : 0;
-
-    // Parse ID_Programa and Capital as integers
-    const parsedID_Programa = parseInt(ID_Programa);
-    const parsedCapital = parseInt(Capital);
     
     const query = 'INSERT INTO Tipo_Financiamento (Tipo, Competitivo, ID_Programa, Capital) VALUES (?, ?, ?, ?)';
-    const values = [tipoAsBoolean, competitivoAsBoolean, parsedID_Programa, parsedCapital];
+    const values = [Tipo, Competitivo, ID_Programa, Capital];
     
     sql.query(connectionString, query, values, (err, rows) => {
         if (err) {
@@ -283,6 +296,20 @@ app.post('/financiadores', (req, res) => {
             res.status(500).json({ error: "Erro interno do servidor." });
             return;
         }
+        res.json(rows);
+    });
+});
+
+app.get('/getFinanciadores', (req, res) => {
+    const query = `SELECT * FROM Tipo_Financiamento`;
+
+    sql.query(connectionString, query, (err, rows) => {
+        if (err) {
+            console.error('Erro ao buscar todos os projetos:', err);
+            res.status(500).json({ error: 'Erro interno do servidor.' });
+            return;
+        }
+
         res.json(rows);
     });
 });

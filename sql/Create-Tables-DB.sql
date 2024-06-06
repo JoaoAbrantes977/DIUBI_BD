@@ -120,7 +120,7 @@ CREATE TABLE Entidade (
 
 CREATE TABLE Tipo_Financiamento (
     ID_Tipo_Financiamento INT PRIMARY KEY IDENTITY(1,1),
-	Tipo BIT NOT NULL, --(Interno ou Externo) 1 - INTERNO / 0 - EXTERNO
+	Tipo INT NOT NULL, --(Interno ou Externo) 1 - INTERNO / 0 - EXTERNO
 	Competitivo BIT NOT NULL, --(sim ou nao) 1 - TRUE / 0 - FALSO
     ID_Programa INT,
 	Capital INT,
